@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--当没有没有参构造(即,只有默认的无参构造时),直接对属性进行赋值-->
+<!--    <bean id="user" class="com.wang.pojo.User">-->
+<!--        <property name="name" value="延庆"/>-->
+<!--        <property name="age" value="17"/>-->
+<!--    </bean>-->
+    <bean id="teacher" class="com.wang.pojo.Teacher">
+        <property name="name" value="小李"/>
+        <property name="grade" value="7"/>
+    </bean>
+
+    <!--当有了有参构造(没有无参构造)时-->
+    <!--1.通过构造器中形参的下标去配置-->
+<!--    <bean id="user" class="com.wang.pojo.User">-->
+<!--        <constructor-arg index="0" value="延庆"/>-->
+<!--        <constructor-arg index="1" value="220"/>-->
+<!--    </bean>-->
+
+    <!--2.通过构造器中形参的参数类型去配置,一般不建议使用-->
+<!--    <bean id="user" class="com.wang.pojo.User">-->
+<!--        <constructor-arg type="java.lang.String" value="小王"/>-->
+<!--        <constructor-arg type="java.lang.Integer" value="29"/>-->
+<!--    </bean>-->
+
+    <!--3.通过构造器中的形参的名称去配置,最常用-->
+    <bean id="user" class="com.wang.pojo.User">
+        <constructor-arg name="name" value="王小庆"/>
+        <constructor-arg name="age" value="66"/>
+    </bean>
+
+</beans>

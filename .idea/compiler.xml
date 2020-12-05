@@ -9,6 +9,7 @@
         <module name="spring-01-ioc02" />
         <module name="spring-02-hellospring" />
         <module name="spring-01-ioc01" />
+        <module name="spring-03-ioc" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="12" />

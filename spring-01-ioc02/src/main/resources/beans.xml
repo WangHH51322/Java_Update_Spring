@@ -19,6 +19,6 @@
         <!--ref:引用spring容器中创建好的对象
             value:具体的值,基本数据类型
         -->
-        <property name="userDao" ref="userDaoImpl"/>
+        <property name="userDao" ref="userDaoJdbcImpl"/>
     </bean>
 </beans>

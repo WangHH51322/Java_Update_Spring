@@ -13,7 +13,21 @@
         <module>spring-01-ioc01</module>
         <module>spring-02-hellospring</module>
         <module>spring-01-ioc02</module>
+        <module>spring-03-ioc</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration> <!--让编译器使用本地的12版本jdk-->
+                    <source>12</source>
+                    <target>12</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
