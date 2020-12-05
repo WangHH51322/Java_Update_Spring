@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--使用Spring来创建对象,在spring中这些都称为Bean
+    在这里: bean = 对象 , 就相当于 new Hello();即: Hello hello = new Hello();
+
+    bean里面的 id 相当于变量名 ; class 相当于 new 的对象
+
+    property 相当于给对象中的属性赋值
+    -->
+    <bean id="userDaoImpl" class="com.wang.dao.UserDaoImpl"></bean>
+    <bean id="userDaoJdbcImpl" class="com.wang.dao.UserDaoJdbcImpl"></bean>
+    <bean id="userDaoMySqlImpl" class="com.wang.dao.UserDaoMySqlImpl"></bean>
+
+    <bean id="userServiceImpl" class="com.wang.service.UserServiceImpl">
+        <!--ref:引用spring容器中创建好的对象
+            value:具体的值,基本数据类型
+        -->
+        <property name="userDao" ref="userDaoImpl"/>
+    </bean>
+</beans>

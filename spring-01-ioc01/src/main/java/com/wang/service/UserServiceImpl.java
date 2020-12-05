@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService{
 
     private UserDao userDao;
 
-    //利用set方法实现进行动态注入
+    //利用set方法实现,进行动态注入
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
