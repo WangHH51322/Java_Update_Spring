@@ -9,7 +9,13 @@
 <!--        <property name="name" value="延庆"/>-->
 <!--        <property name="age" value="17"/>-->
 <!--    </bean>-->
-    <bean id="teacher" class="com.wang.pojo.Teacher">
+
+    <!--
+    id: bean 的唯一标识符,相当于对象名
+    class:  bean 对象对应的全限定名: 包名+类型
+    name:   也是别名,而且name可以同时取多个别名
+    -->
+    <bean id="teacher" class="com.wang.pojo.Teacher" name="teacherT,tt">
         <property name="name" value="小李"/>
         <property name="grade" value="7"/>
     </bean>
@@ -33,4 +39,6 @@
         <constructor-arg name="age" value="66"/>
     </bean>
 
+    <!--如果添加了别名,可以使用这个别名去获取对象-->
+    <alias name="user" alias="User"/>
 </beans>

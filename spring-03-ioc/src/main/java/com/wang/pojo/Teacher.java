@@ -28,4 +28,8 @@ public class Teacher {
     public void setGrade(Integer grade) {
         this.grade = grade;
     }
+
+    public void show(){
+        System.out.println("我是" + this.name + "老师,我教" + this.grade + "年级!");
+    }
 }
