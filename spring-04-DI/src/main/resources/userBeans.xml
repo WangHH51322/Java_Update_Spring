@@ -6,10 +6,15 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!--p 命名空间注入,可以直接注入属性的值:properties-->
+    <!--p 命名空间注入,可以直接注入属性的值:properties(空参构造)-->
     <bean id="user" class="com.wang.pojo.User" p:name="小刘" p:age="18"/>
 
-    <!--c 命名空间注入,通过构造器注入:construct-args-->
+    <!--c 命名空间注入,通过构造器注入:construct-args(有形参的构造)-->
     <bean id="user2" class="com.wang.pojo.User" c:name="小王" c:age="22"/>
+
+    <bean id="instance" class="com.wang.pojo.User" scope="prototype">
+        <property name="name" value="小李"/>
+        <property name="age" value="75"/>
+    </bean>
 
 </beans>

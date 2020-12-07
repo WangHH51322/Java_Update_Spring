@@ -46,7 +46,15 @@ public class MyTest {
         ApplicationContext context = new ClassPathXmlApplicationContext("userBeans.xml");
         User user = context.getBean("user", User.class);
         User user2 = context.getBean("user2", User.class);
+
+        User user31 = context.getBean("user", User.class);
+        User user32 = context.getBean("instance", User.class);
         System.out.println(user.toString());
         System.out.println(user2.toString());
+
+        //代理模式下,取出来的对象是一样的
+        System.out.println(user31 == user);  //true
+        //原型模式下,取出来的对象是不一样的
+        System.out.println(user32 == user);  //false
     }
 }
