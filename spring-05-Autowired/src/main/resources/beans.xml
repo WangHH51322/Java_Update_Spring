@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="cat" class="com.wang.pojo.Cat">
+        <property name="age" value="3"/>
+        <property name="name" value="三花"/>
+    </bean>
+    <bean id="dog" class="com.wang.pojo.Dog">
+        <property name="name" value="大黄"/>
+        <property name="age" value="4"/>
+    </bean>
+
+    <bean id="person" class="com.wang.pojo.Person">
+        <property name="name" value="小强"/>
+        <property name="age" value="18"/>
+        <property name="cat" ref="cat"/>
+        <property name="dog" ref="dog"/>
+    </bean>
+
+</beans>

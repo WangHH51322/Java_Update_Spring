@@ -310,3 +310,44 @@ xmlns:p="http://www.springframework.org/schema/p"
 xmlns:c="http://www.springframework.org/schema/c"
 ```
 
+
+
+### 5.4 Bean的作用域
+
+![image-20201207200733823](C:\Users\HH\AppData\Roaming\Typora\typora-user-images\image-20201207200733823.png)
+
+1. 代理模式（Spring默认机制，也成单例模式）
+
+   ```xml
+   <bean id="instance" class="com.wang.pojo.User" scope="singleton">
+       <property name="name" value="小李"/>
+       <property name="age" value="75"/>
+   </bean>
+   ```
+
+2. 原型模式 : 每次从容器中get的时候 , 都会产生一个新对象
+
+   ```xml
+   <bean id="instance" class="com.wang.pojo.User" scope="prototype">
+       <property name="name" value="小李"/>
+       <property name="age" value="75"/>
+   </bean>
+   ```
+
+3. request / session / application 等只能在web开发中使用
+
+
+
+## 7. Bean的自动装配
+
+* 自动装配是Spring满足bean依赖的一种方式 ! 
+* Spring会在上下文中自动寻找 , 并自动给bean装配属性 !
+
+
+
+在Spring中有三种装配方式
+
+1. 在xml中显式的配置
+2. 在Java中显式配置
+3. ==隐式 的自动装配bean==
+
