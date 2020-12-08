@@ -338,7 +338,7 @@ xmlns:c="http://www.springframework.org/schema/c"
 
 
 
-## 7. Bean的自动装配
+## 6. Bean的自动装配
 
 * 自动装配是Spring满足bean依赖的一种方式 ! 
 * Spring会在上下文中自动寻找 , 并自动给bean装配属性 !
@@ -350,4 +350,527 @@ xmlns:c="http://www.springframework.org/schema/c"
 1. 在xml中显式的配置
 2. 在Java中显式配置
 3. ==隐式 的自动装配bean==
+
+### 6.1 byName与byType进行自动装配
+
+```xml
+<bean id="cat" class="com.wang.pojo.Cat">
+    <property name="age" value="3"/>
+    <property name="name" value="三花"/>
+</bean>
+<bean id="dog" class="com.wang.pojo.Dog">
+    <property name="name" value="大黄"/>
+    <property name="age" value="4"/>
+</bean>
+
+<!--自动装配-->
+<!--
+    byName:会自动在容器上下文中查找,和自己对象set方法后面的值对应的bean id
+    byType:会自动在容器上下文中查找,和自己对象属性类型相同的bean
+    -->
+<bean id="person" class="com.wang.pojo.Person" autowire="byName">
+    <property name="name" value="小明"/>
+    <property name="age" value="18"/>
+</bean>
+```
+
+小结 :
+
+* byName的时候 , 需要保证所有bean的id唯一 , 并且这个bean需要和自动注入的属性的set方法的值一致 !
+* byType的时候 , 需要保证所有bean的class唯一 , 并且这个bean需要和自动注入的属性的类型一致 ! 
+
+### 6.2 使用注解自动装配
+
+jdk1.5 , Spring2.5 开始支持注解
+
+注解使用须知 : 
+
+1. 导入约束 : context约束
+
+2. 配置注解的支持
+
+3. ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+   
+       <context:annotation-config/>
+   
+   </beans>
+   ```
+
+
+
+**科普 :** 
+
+```java
+@Nullable	字段标记这个注解,说明这个字段可以为null; 
+```
+
+```java
+public @interface Autowired {
+    boolean required() default true;
+}
+```
+
+**测试代码 :**
+
+```java
+//比如这个有参构造里面age前有 @Nullable ,说明这个字段可以为null;
+public Person(Cat cat, Dog dog, String name,@Nullable Integer age) {
+    this.cat = cat;
+    this.dog = dog;
+    this.name = name;
+    this.age = age;
+}
+```
+
+```java
+public class Person {
+
+    //如果显式定义了Autowired的required属性为false,说明这个对象可以为null,否则不允许为空
+    @Autowired(required = false)
+    private Cat cat;
+    @Autowired
+    private Dog dog;
+
+    private String name;
+    private Integer age;
+}
+```
+
+
+
+如果@Autowired自动装配的环境比较复杂 , 自动装配无法通过一个注解@Autowired完成时 , 可以使用==@Qualifier(vlaue="xxx")==去配和@Autowired的使用 , 指定一个唯一的bean对象注入 !
+
+**测试代码 :** 
+
+```java
+public class Person {
+
+    //如果显式定义了Autowired的required属性为false,说明这个对象可以为null,否则不允许为空
+    @Autowired(required = false)
+    private Cat cat;
+    @Autowired
+    @Qualifier(value = "dog2")
+    private Dog dog;
+
+    private String name;
+    private Integer age;
+}
+```
+
+
+
+**@Resource注解**
+
+```java
+public class Person {
+
+    @Resource
+    private Cat cat;
+    @Resource@Autowired(name = "dog2")
+    private Dog dog;
+
+    private String name;
+    private Integer age;
+}
+```
+
+
+
+小结 : 
+
+==@Resource== 和 ==@Autowired==的区别
+
+* 都是用来自动装配的 , 都可以放在属性字段上
+
+* @Autowired 默认按照byType的方式实现 , 其次是byName
+
+* @Resource 默认通过byName的方式实现 , 如果找不到名字 , 则通过byType实现 , 如果都找不到则报错
+
+* @Resource 的使用需要额外导入依赖
+
+  ```xml
+  <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-annotations-api</artifactId>
+      <version>9.0.36</version>
+  </dependency>
+  ```
+
+  
+
+## 7. 使用注解开发
+
+要是用注解开发 , 必须保证aop的包导入
+
+![image-20201208194749356](C:\Users\HH\AppData\Roaming\Typora\typora-user-images\image-20201208194749356.png)
+
+使用注解需要导入context约束 , 增加注解的支持 !
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+</beans>
+```
+
+**注解 :** 
+
+1. bean :
+
+   @Component : 组件 , 放在类上 , 说明这个类被Spring管理了 , 就是Bean
+
+2. 属性如何注入 :
+
+   ```java
+   /*
+   * @Component 等价于 <bean id="user" class="com.wang.pojo.User"/> , 即"组件"
+   * 并且实体类的名字(bean id)默认是类名的小写
+   * */
+   @Component
+   public class User {
+   
+       /*
+       属性值的注入使用@Value注解,相当于 <property name="name" value="小刘"/>
+        */
+       @Value("小刘")
+       private String name;
+   
+       @Override
+       public String toString() {
+           return "User{" +
+                   "name='" + name + '\'' +
+                   '}';
+       }
+   
+       public String getName() {
+           return name;
+       }
+   
+   //    @Value("小刘")
+       public void setName(String name) {
+           this.name = name;
+       }
+   }
+   ```
+
+3. 衍生注解
+
+   @Component有几个衍生注解 , 我们在web开发中 , 会按照mvc三层架构分层 !
+
+   * dao层 : ==@Repository==
+   * service层 : ==@Service==
+   * controller层 : ==@Controller==
+
+   这四个注解的功能都是一样的 , 都是代表将某个类注册到Spring中 , 装配Bean
+
+4. 作用域
+
+   ```java
+   /*
+   * @Component 等价于 <bean id="user" class="com.wang.pojo.User"/> , 即"组件"
+   * 并且实体类的名字(bean id)默认是类名的小写
+   * */
+   @Component
+   /*
+   @Scope(value = "singleton") 等价于 <bean id="user" class="com.wang.pojo.User" scope="singleton">
+    */
+   @Scope(value = "singleton")
+   public class User {
+   
+       /*
+       属性值的注入使用@Value注解,相当于 <property name="name" value="小刘"/>
+        */
+       @Value("小刘")
+       private String name;
+   
+       @Override
+       public String toString() {
+           return "User{" +
+                   "name='" + name + '\'' +
+                   '}';
+       }
+   
+       public String getName() {
+           return name;
+       }
+   
+   //    @Value("小刘")
+       public void setName(String name) {
+           this.name = name;
+       }
+   }
+   ```
+
+5. 小结
+
+   xml 与注解 :
+
+   * xml 更加万能 , 适用于任何场所 ! 维护方便
+   * 注解  不是自己的类使用不了 , 维护相对复杂
+
+   最佳实践 : 
+
+   * xml 用来管理bean ; 
+   * 注解只负责完成属性的注入
+
+   在使用过程中 , 只需要注意 , 必须==让注解生效== , 开启注解支持 : 
+
+   ```xml
+   <?xml version="1.0" encoding="UTF-8"?>
+   <beans xmlns="http://www.springframework.org/schema/beans"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:context="http://www.springframework.org/schema/context"
+          xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+   
+       <!--指定要扫描的包,这个包下的注解就会生效-->
+       <context:component-scan base-package="com.wang"/>
+   
+       <!--使用注解需要导入context约束 , 增加注解的支持-->
+       <context:annotation-config/>
+   
+   </beans>
+   ```
+
+   
+
+## 8. 使用Java的方式配置Spring
+
+完全不使用Spring的xml配置 , 全权交给Java来做
+
+**实体类 :**
+
+```java
+@Component
+public class User {
+
+    @Value("小李")
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+}
+```
+
+**配置类 :**
+
+```java
+/*
+@Configuration 也会注册倒到容器中
+               代表这是一个配置类,相当于之前的beans.xml
+ */
+@Configuration
+/*
+指定要扫描的包,这个包下的注解就会生效
+ */
+@ComponentScan("com.wang")
+/*
+通过import将多个配置类中的内容合并到一起
+ */
+@Import(MyConfig.class)
+public class  MyConfig {
+
+    /*
+    @Bean 等价于 <bean id="newUser" class="com.wang.pojo.User"/>
+     */
+    @Bean
+    public User newUser(){
+        return new User();
+    }
+}
+```
+
+**测试类 :**
+
+```java
+public class MyTest {
+    public static void main(String[] args) {
+        /*
+        如果完全使用了配置类方式去做,则需要
+        使用 new AnnotationConfigApplicationContext() 获取配置类的上下文,通过配置类的class对象加载!
+         */
+        ApplicationContext context = new AnnotationConfigApplicationContext(MyConfig.class);
+        User newUser = context.getBean("newUser", User.class);
+        System.out.println(newUser.getName());
+    }
+}
+```
+
+
+
+## 9. 代理模式
+
+### 9.1 静态代理
+
+**角色分析 :**
+
+* 抽象角色 : 一般会使用接口或者抽象类来解决
+
+* 真实角色 : 被代理的角色
+
+* 代理角色 : 代理真实角色 , 代理真实角色后 , 我们一般会做一些附属操作
+
+* 客户 : 访问代理角色的人 !!!
+
+  
+
+代理模式的好处 :
+
+* 可以使真实角色的操作更加纯粹 , 不用去关注一些公共的业务
+* 公共业务交给代理角色 , 实现业务分工
+* 公共业务发生拓展时 , 方便集中管理
+
+缺点 :
+
+* 一个真实角色就会产生一个代理角色 ; 代码量会翻倍 , 开发效率会变低
+
+
+
+演示代码 : 
+
+1. 接口 :
+
+   ```java
+   public interface Rent {
+   
+       public void rent();
+   }
+   ```
+
+2. 真实角色 :
+
+   ```java
+   //房东
+   public class LandLord implements Rent{
+   
+       @Override
+       public void rent() {
+           System.out.println("房东要出租房屋!");
+       }
+   }
+   ```
+
+3. 代理角色 :
+
+   ```java
+   //中介代理
+   public class Proxy implements Rent{
+   
+       private LandLord landLord;
+   
+       public Proxy(){}
+   
+       public Proxy(LandLord landLord){
+           this.landLord = landLord;
+       }
+   
+       @Override
+       public void rent() {
+           landLord.rent();
+       }
+   
+       public void seeHouse(){
+           System.out.println("中介带你看房!");
+       }
+   
+       public void fee(){
+           System.out.println("中介收中介费");
+       }
+   
+       public void contact(){
+           System.out.println("中介跟你签合同!");
+       }
+   }
+   ```
+
+4. 客户访问代理角色
+
+   ```java
+   public class Client {
+       public static void main(String[] args) {
+   
+           //房东要租房子
+           LandLord landLord = new LandLord();
+   
+           //代理
+           Proxy proxy = new Proxy(landLord);
+           proxy.seeHouse();
+           proxy.rent();
+           proxy.contact();
+           proxy.fee();
+       }
+   }
+   ```
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

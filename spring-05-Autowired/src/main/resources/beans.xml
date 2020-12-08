@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
     <bean id="cat" class="com.wang.pojo.Cat">
         <property name="age" value="3"/>
         <property name="name" value="三花"/>
     </bean>
-    <bean id="dog" class="com.wang.pojo.Dog">
+    <bean id="dog1" class="com.wang.pojo.Dog">
         <property name="name" value="大黄"/>
         <property name="age" value="4"/>
     </bean>
-
-    <bean id="person" class="com.wang.pojo.Person">
-        <property name="name" value="小强"/>
-        <property name="age" value="18"/>
-        <property name="cat" ref="cat"/>
-        <property name="dog" ref="dog"/>
+    <bean id="dog2" class="com.wang.pojo.Dog">
+        <property name="name" value="大黄2"/>
+        <property name="age" value="3"/>
     </bean>
 
+    <!--开启注解支持-->
+    <context:annotation-config/>
+    <bean id="person" class="com.wang.pojo.Person">
+        <property name="name" value="小明"/>
+<!--        <property name="age" value="18"/>-->
+    </bean>
+
+
+    <!--手动装配-->
+    <!--    <bean id="person" class="com.wang.pojo.Person">-->
+    <!--        <property name="name" value="小强"/>-->
+    <!--        <property name="age" value="18"/>-->
+    <!--        <property name="cat" ref="cat"/>-->
+    <!--        <property name="dog" ref="dog"/>-->
+    <!--    </bean>-->
+
+    <!--自动装配-->
+    <!--
+    byName:会自动在容器上下文中查找,和自己对象set方法后面的值对应的bean id
+    byName:会自动在容器上下文中查找,和自己对象属性类型相同的bean
+    -->
+    <!--    <bean id="person" class="com.wang.pojo.Person" autowire="byName">-->
+    <!--        <property name="name" value="小明"/>-->
+    <!--        <property name="age" value="18"/>-->
+    <!--    </bean>-->
 </beans>

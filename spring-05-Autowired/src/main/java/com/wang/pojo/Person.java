@@ -1,5 +1,11 @@
 package com.wang.pojo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.lang.Nullable;
+
+import javax.annotation.Resource;
+
 /**
  * @author Qing
  * @version 1.0
@@ -7,15 +13,22 @@ package com.wang.pojo;
  */
 public class Person {
 
+    //如果显式定义了Autowired的required属性为false,说明这个对象可以为null,否则不允许为空
+    @Autowired(required = false)
+//    @Resource
     private Cat cat;
+    @Autowired
+    @Qualifier(value = "dog2")
+//    @Resource(name = "dog2")
     private Dog dog;
+
     private String name;
     private Integer age;
 
     public Person() {
     }
 
-    public Person(Cat cat, Dog dog, String name, Integer age) {
+    public Person(Cat cat, Dog dog, String name,@Nullable Integer age) {
         this.cat = cat;
         this.dog = dog;
         this.name = name;
